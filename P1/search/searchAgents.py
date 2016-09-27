@@ -337,7 +337,6 @@ class CornersProblem(search.SearchProblem):
                     if not nextNode in visited:
                         visited.append(nextNode)
                 successors.append(((nextNode, visited),action,1))
-            "*** YOUR CODE HERE ***"
 
         self._expanded += 1 # DO NOT CHANGE
         return successors
