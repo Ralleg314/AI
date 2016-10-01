@@ -303,10 +303,13 @@ class CornersProblem(search.SearchProblem):
         """
         Returns whether this search state is a goal state of the problem.
         """
+        #state[1] stores the food in the game
+        #Inm this problem, it will correspond to all 4 corners
         visited=state[1]
         if state[0] in self.corners:
             if state[0] not in visited:
                 visited.append(state[0])
+            #If len(visited)==4, all corners have been visited
             return len(visited)==4
         return False
 
