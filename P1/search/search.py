@@ -89,21 +89,30 @@ def depthFirstSearch(problem):
     print "Is the start a goal?", problem.isGoalState(problem.getStartState())
     print "Start's successors:", problem.getSuccessors(problem.getStartState())
     """
+    #In DFS, we will use a stack to store the posible paths
     sol=util.Stack()
+    #Stores the starting point, the path and the cost
     sol.push((problem.getStartState(),[],0))
+    #Nodes we have visited
     expanded=[]
+    #There's the possibility that there's not a path from the starting point to the end, so we
+    #check if our stack is empty
     while not sol.isEmpty():
         curPos, path, cost=sol.pop()
+        #If the current position is a goal state, we return the path
         if problem.isGoalState(curPos):
             return path
+        #If we haven't visited this node yet, we can still continue following its path
         if not curPos in expanded:
             expanded.append(curPos)
+            #Adds a new component for each successor of our current position
             for s, d, c in problem.getSuccessors(curPos):
                 sol.push((s,path+[d],c))
             
     
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
+    #The same as in DFS, but with a queue
     sol=util.Queue()
     sol.push((problem.getStartState(),[],0))
     expanded=[]
@@ -130,6 +139,8 @@ def nullHeuristic(state, problem=None):
 
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
+    # This problem will be almost identical to BFS, but now, we will use a priority queue
+    # That will look at the distances between nodes, to find the less "expensive" path
     sol=util.PriorityQueue()
     sol.push((problem.getStartState(),[],0),0)
     expanded=[]
