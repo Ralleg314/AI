@@ -476,9 +476,20 @@ def foodHeuristic(state, problem):
     Subsequent calls to this heuristic can access
     problem.heuristicInfo['wallCount']
     """
+    #Takes the information we'll need
     position, foodGrid = state
-    
-    return 0
+    #We want to use the grid as a list
+    foodList=foodGrid.asList()
+    if foodList:
+        #First, we will look for the closest food in the grid
+        dmin,minFood=min([(util.manhattanDistance(position, food), food) for food in foodList])
+        #Then, we check how far is the furthest food, so the distance to Pac-man will be calculated
+        #as the sum of both, to have a more "realistic" value in a long term
+        dmax=max([(util.manhattanDistance(minFood, food)) for food in foodList])
+    else:
+        #If there isn't any position in our grid, we have already won the game, so the distance will be 0
+        return 0
+    return dmin+dmax
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
