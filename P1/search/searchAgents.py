@@ -324,7 +324,7 @@ class CornersProblem(search.SearchProblem):
             is the incremental cost of expanding to that successor
         """
         
-        
+        #We will check all directions and choose the one that doesn't hit a wall
         successors = []
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
             # Add a successor state to the successor list if the action is legal
@@ -334,8 +334,10 @@ class CornersProblem(search.SearchProblem):
             nextx, nexty = int(x + dx), int(y + dy)
             hitsWall = self.walls[nextx][nexty]
             visited=list(state[1])
+            #If we don't hit a wall, the taken direction is valid
             if not hitsWall:
                 nextNode=(nextx,nexty)
+                #If the position we arrive once we move is a corner, we add it to visited
                 if nextNode in self.corners:
                     if not nextNode in visited:
                         visited.append(nextNode)
@@ -378,14 +380,16 @@ def cornersHeuristic(state, problem):
     #visitedCorners = state[1]
     corners = problem.corners  # These are the corner coordinates
     walls = problem.walls  # These are the walls of the maze, as a Grid (game.py)
-
+    #Corners that haven't been visited
     unexpanded = [corner for corner in corners if corner not in state[1]]
     d = 0
-
+    #This will work almost like the exercice before, but now the distance will be important
     currentNode = node
     while unexpanded:
+        #We'll move to the closest corner
         distance, currentNode = min([(util.manhattanDistance(currentNode, corner), corner) for corner in unexpanded])
         d += distance
+        #Removes the corner we are heading to
         unexpanded.remove(currentNode)
     return d
 
