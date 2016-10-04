@@ -107,7 +107,7 @@ def depthFirstSearch(problem):
             expanded.append(curPos)
             #Adds a new component for each successor of our current position
             for s, d, c in problem.getSuccessors(curPos):
-                sol.push((s,path+[d],c))
+                sol.push((s,path+[d],c+cost))
             
     
 def breadthFirstSearch(problem):
@@ -123,7 +123,7 @@ def breadthFirstSearch(problem):
         if not curPos in expanded:
             expanded.append(curPos)
             for s, d, c in problem.getSuccessors(curPos):
-                sol.push((s,path+[d],c))
+                sol.push((s,path+[d],c+cost))
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
