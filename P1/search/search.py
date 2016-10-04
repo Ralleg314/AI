@@ -125,6 +125,28 @@ def breadthFirstSearch(problem):
             for s, d, c in problem.getSuccessors(curPos):
                 sol.push((s,path+[d],c+cost))
 
+def limitDepthDFS(problem,limit=70):
+    #In DFS, we will use a stack to store the posible paths
+    sol=util.Stack()
+    #Stores the starting point, the path and the cost
+    sol.push((problem.getStartState(),[],0))
+    #Nodes we have visited
+    expanded=[]
+    #There's the possibility that there's not a path from the starting point to the end, so we
+    #check if our stack is empty
+    while not sol.isEmpty():
+        curPos, path, cost=sol.pop()
+        #If the current position is a goal state, we return the path
+        if problem.isGoalState(curPos):
+            return path
+        #If we haven't visited this node yet, we can still continue following its path
+        if not curPos in expanded:
+            expanded.append(curPos)
+            #Adds a new component for each successor of our current position
+            for s, d, c in problem.getSuccessors(curPos):
+		#If our path has more than 70 elements, we won't continue using it
+                if(len(path+[d])<=limit):sol.push((s,path+[d],c+cost))
+
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
