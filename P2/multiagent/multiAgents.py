@@ -79,8 +79,7 @@ class ReflexAgent(Agent):
         for i in range(len(newGhostStates)):
 	    if(newScaredTimes[i]<5):score-=100./100+util.manhattanDistance(newGhostStates[i].getPosition(),newPos)
 	    else:score+=100./100+util.manhattanDistance(newGhostStates[i].getPosition(),newPos)
-	#for i in range(len(newFood)):
-	print newFood
+	for i in range(len(newFood)):
 	    #score+=util.manhattanDistance(newFood[i].getPosition(),newPos)
         #if(newScaredTimes[0]==0 and newScaredTimes[1]==0):
 	return score
