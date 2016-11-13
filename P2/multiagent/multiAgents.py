@@ -67,21 +67,23 @@ class ReflexAgent(Agent):
         Print out these variables to see what you're getting, then combine them
         to create a masterful evaluation function.
         """
-        # Useful information you can extract from a GameState (pacman.py)
+        #To evaluate each action, we will consider three cases
+        #The first will be if Pacman remains in the same place.
+        #In that case, its evaluation will be -inf
         if action == 'Stop':return -float("inf")
         successorGameState = currentGameState.generatePacmanSuccessor(action)
         newPos = successorGameState.getPacmanPosition()
-        newFood = successorGameState.getFood()
         newGhostStates = successorGameState.getGhostStates()
         newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
         ghosts=len(newGhostStates)
+        #If the ghost can kill us moving to a given direction, we don't want it to go there
+        #Therefore, its evaluation will be the same as if it was stopped
         for i in range(ghosts):
             if newGhostStates[i].getPosition()==newPos and newScaredTimes[i] == 0:
                 return -float("inf")
-        dist=[]
-        for i in currentGameState.getFood().asList():
-            dist.append(manhattanDistance(i,newPos))
-        return 1000 - min(dist)
+            
+        #Finally, we haver to get to the closest food, so we will calculate its distance to it and return the minimal
+        return 1000 - min([manhattanDistance(i,newPos) for i in currentGameState.getFood().asList()])
 
       
 ######################
