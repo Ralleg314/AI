@@ -246,35 +246,29 @@ def betterEvaluationFunction(currentGameState):
       Your extreme ghost-hunting, pellet-nabbing, food-gobbling, unstoppable
       evaluation function (question 5).
 
-      DESCRIPTION: <write something here so we know what you did>
+      DESCRIPTION: We will take in account some factors:
+        -Distances to the food
+        -Is the ghost scared? How far is the ghost from Pacman?
     """
     newPos = currentGameState.getPacmanPosition()
-    newFood = currentGameState.getFood()
+    newFood = currentGameState.getFood().asList()
     newGhostStates = currentGameState.getGhostStates()
     newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
 
-    foodDist = 0
-    for food in newFood.asList():
-        dist = manhattanDistance(food, newPos)
-        foodDist += dist
+    #food will evaluate where all the pellets are
+    food = sum([manhattanDistance(food, newPos) for food in newFood])
 
-    score = 0
-    if len(newFood.asList()) == 0:
-        score = 1000000000
-
-    ghostScore = 0
-    if newScaredTimes[0] > 0:
-        ghostScore += 100.0
-    for state in newGhostStates:
-        dist = manhattanDistance(newPos, state.getPosition())
-        if state.scaredTimer == 0 and dist < 3:
-            ghostScore -= 1.0 / (3.0 - dist)
-        elif state.scaredTimer < dist:
-            ghostScore += 1.0 / (dist)
-
-    score += 1.0 / (1 + len(newFood.asList())) + 1.0 / (1 + foodDist) + ghostScore + currentGameState.getScore()
-
-    return score
+    #ghost will evaluate if the ghost is close to Pacman and if Pacman can or not eat it
+    ghost = 0
+    for i in range(len(newGhostStates)):
+        d = manhattanDistance(newPos, newGhostStates[i].getPosition())
+        if newScaredTimes[0] > 0:
+            ghost += 100.0
+        if newScaredTimes[i] == 0 and d < 1:
+            ghost -= d
+        elif newScaredTimes[i] < d:
+            ghost += 1. / d
+    return 1. / (1 + food * len(newFood)) + (1./1+ghost) + currentGameState.getScore()
 
 
 # Abbreviation
