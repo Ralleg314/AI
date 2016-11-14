@@ -260,15 +260,21 @@ def betterEvaluationFunction(currentGameState):
 
     #ghost will evaluate if the ghost is close to Pacman and if Pacman can or not eat it
     ghost = 0
+    #Check every ghost
     for i in range(len(newGhostStates)):
         d = manhattanDistance(newPos, newGhostStates[i].getPosition())
+        #To give more credit to distances, we will work with 10
+        #If the ghost is scared, we want to go after it
         if newScaredTimes[0] > 0:
-            ghost += 100.0
+            ghost += 10.0
+        #If the ghost is not scared and we are too close to it, we have to run away from it
         if newScaredTimes[i] == 0 and d < 1:
-            ghost -= d
+            ghost -= 1. / (1-d)
+        #If we can get to it before it stops being scared, we will try to eat it
         elif newScaredTimes[i] < d:
             ghost += 1. / d
-    return 1. / (1 + food * len(newFood)) + (1./1+ghost) + currentGameState.getScore()
+    #Finally, we join all this values
+    return 1. / (1 + food * len(newFood)) + 10*ghost + currentGameState.getScore()
 
 
 # Abbreviation
