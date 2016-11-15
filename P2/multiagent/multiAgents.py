@@ -13,6 +13,12 @@
 # Pieter Abbeel (pabbeel@cs.berkeley.edu).
 
 
+
+#########################
+#Angel Bergantiños Yeste#
+#########################
+
+
 from util import manhattanDistance
 from game import Directions
 import random, util
@@ -280,3 +286,34 @@ def betterEvaluationFunction(currentGameState):
 # Abbreviation
 better = betterEvaluationFunction
 
+class BoundedIntelligenceMaxAgent(MultiAgentSearchAgent):
+    def getAction(self, gameState):
+        """
+          Returns the expectimax action using self.depth and self.evaluationFunction
+
+          All ghosts should be modeled as choosing uniformly at random from their
+          legal moves.
+        """
+        agents=gameState.getNumAgents()
+        depth=agents*self.depth
+        return max([(self.boundedintelligencemaxagent(gameState.generateSuccessor(0,action),depth-1,1,agents),action) for action in gameState.getLegalActions(0)])[1]
+
+    #As before, it will work very similarly to minimax algorithm
+    def boundedintelligencemaxagent(self, gameState, depth, index, agents):
+        if depth == 0 or gameState.isLose() or gameState.isWin():
+            return self.evaluationFunction(gameState)
+        newAgent = (index + 1) % agents
+        if not index:
+            return max([self.boundedintelligencemaxagent(gameState.generateSuccessor(index, i), depth - 1, newAgent, agents) for i in gameState.getLegalActions(index)])
+        else:
+            #The difference between minimax and boundedintelligencemaxagent is that we will use a mean of all possible outputs
+            l=len(gameState.getLegalActions(index))
+            ghost = [self.boundedintelligencemaxagent(gameState.generateSuccessor(index, i), depth - 1, newAgent, agents) for i in gameState.getLegalActions(index)]
+            #Gets the minimal value
+            vm=min(ghost)
+            beta=3*vm
+            for i in range(1,l):
+                #We already have the minimal, so we don't want to add it again
+                beta+=ghost[i]*(ghost[i]!=vm)
+            return float(beta/(l+2.))
+    
