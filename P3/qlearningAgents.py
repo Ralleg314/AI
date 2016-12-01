@@ -5,7 +5,7 @@
 # educational purposes provided that (1) you do not distribute or publish
 # solutions, (2) you retain this notice, and (3) you provide clear
 # attribution to UC Berkeley, including a link to http://ai.berkeley.edu.
-# 
+#
 # Attribution Information: The Pacman AI projects were developed at UC Berkeley.
 # The core projects and autograders were primarily created by John DeNero
 # (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
@@ -42,9 +42,6 @@ class QLearningAgent(ReinforcementAgent):
     def __init__(self, **args):
         "You can initialize Q-values here..."
         ReinforcementAgent.__init__(self, **args)
-        self.epsilon=random.random()
-        self.alpha=random.random()
-        self.discount=random.random()
         self.Q=util.Counter()
 
     def getQValue(self, state, action):
@@ -65,7 +62,7 @@ class QLearningAgent(ReinforcementAgent):
         """
         legalActions=self.getLegalActions(state)
         if legalActions:
-            return max([self.Q[state,i] for i in self.getLegalActions(state)])
+            return max([self.Q[(state,i)] for i in self.getLegalActions(state)])
         return 0.0
 
     def computeActionFromQValues(self, state):
@@ -76,7 +73,7 @@ class QLearningAgent(ReinforcementAgent):
         """
         legalActions=self.getLegalActions(state)
         if legalActions:
-            return max([(self.Q[state,i],i) for i in legalActions])[1]
+            return max([(self.Q[(state,i)],i) for i in legalActions])[1]
         return None
 
     def getAction(self, state):
