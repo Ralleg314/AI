@@ -91,6 +91,7 @@ class QLearningAgent(ReinforcementAgent):
         legalActions = self.getLegalActions(state)
         action = None
         if legalActions:
+            # Choose a random action or the best, depending of flipCoin
             if util.flipCoin(self.epsilon):
                 action=random.choice(legalActions)
             else:
@@ -106,6 +107,7 @@ class QLearningAgent(ReinforcementAgent):
           NOTE: You should never call this function,
           it will be called on your behalf
         """
+        # Update the value of the state and action depending on the values before and the current one
         self.Q[(state, action)]=(1-(self.alpha))*self.Q[(state, action)]+(self.alpha)*(reward+(self.discount)*self.computeValueFromQValues(nextState))
 
     def getPolicy(self, state):
