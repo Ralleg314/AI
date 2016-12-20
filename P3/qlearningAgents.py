@@ -43,6 +43,9 @@ class QLearningAgent(ReinforcementAgent):
         "You can initialize Q-values here..."
         ReinforcementAgent.__init__(self, **args)
         self.Q=util.Counter()
+        #This counter will count how many times each action has been
+        #performed in a specific state
+        self.used=util.Counter()
 
     def getQValue(self, state, action):
         """
@@ -93,10 +96,23 @@ class QLearningAgent(ReinforcementAgent):
         if legalActions:
             # Choose a random action or the best, depending of flipCoin
             if util.flipCoin(self.epsilon):
-                action=random.choice(legalActions)
+                action=min([(self.used[(state,i)],i) for i in legalActions])[1]
+                self.used[(state,action)]+=1
             else:
                 action=self.computeActionFromQValues(state)
+                self.used[(state,action)]+=1
         return action
+    
+    def getActionPractica(self, state):
+            # Pick Action
+            legalActions = self.getLegalActions(state)
+            action = None
+            if legalActions:
+                if util.flipCoin(self.epsilon):
+                    action=random.choice(legalActions)
+                else:
+                    action=self.computeActionFromQValues(state)
+            return action    
 
     def update(self, state, action, nextState, reward):
         """
